@@ -39,7 +39,7 @@
     }
 
     .wrapper {
-      max-width: 1100px;
+      max-width: 1250px;
       margin: 0 auto;
       padding: 5rem 3rem;
       position: relative;
@@ -170,7 +170,7 @@
 
     tbody tr {
       border-bottom: 1px solid rgba(148, 163, 184, 0.05);
-      transition: background 0.2s, opacity 0.3s;
+      transition: background 0.2s;
     }
 
     tbody tr:hover { background: rgba(30, 41, 59, 0.4); }
@@ -178,7 +178,7 @@
 
     td {
       padding: 1rem;
-      vertical-align: top;
+      vertical-align: middle;
     }
 
     .col-year {
@@ -192,7 +192,7 @@
     .col-project {
       font-weight: 500;
       color: var(--text-primary);
-      min-width: 200px;
+      min-width: 180px;
     }
 
     .col-made-at {
@@ -201,7 +201,7 @@
       white-space: nowrap;
     }
 
-    .col-tech { min-width: 250px; }
+    .col-tech { min-width: 220px; }
 
     .col-link a {
       color: var(--text-secondary);
@@ -222,6 +222,91 @@
     }
 
     tbody tr:hover .col-link .arrow-icon { transform: translate(2px, -2px); }
+
+    /* ─── Project Image Column ─── */
+    .col-image {
+      width: 100px;
+      padding: 0.6rem 1rem;
+    }
+
+    .project-thumb {
+      width: 88px;
+      height: 52px;
+      border-radius: 4px;
+      border: 2px solid var(--bg-secondary);
+      object-fit: cover;
+      background: var(--bg-secondary);
+      transition: border-color 0.3s, transform 0.3s;
+      display: block;
+    }
+
+    tbody tr:hover .project-thumb {
+      border-color: rgba(94, 234, 212, 0.3);
+      transform: scale(1.05);
+    }
+
+    .thumb-placeholder {
+      width: 88px;
+      height: 52px;
+      border-radius: 4px;
+      border: 2px dashed rgba(148, 163, 184, 0.15);
+      background: rgba(30, 41, 59, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.6rem;
+      font-family: var(--font-mono);
+    }
+
+    /* ─── Image Preview Modal ─── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-img {
+      max-width: 85vw;
+      max-height: 85vh;
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: modalIn 0.25s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-close {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 101;
+    }
+
+    .modal-close:hover { background: rgba(255, 255, 255, 0.2); }
 
     .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 
@@ -261,8 +346,11 @@
       .hide-mobile { display: none; }
 
       td, th { padding: 0.75rem 0.5rem; }
-      .col-project { min-width: 140px; }
+      .col-project { min-width: 120px; }
       .col-tech { min-width: 0; }
+
+      .col-image { width: 70px; padding: 0.5rem; }
+      .project-thumb, .thumb-placeholder { width: 60px; height: 36px; }
 
       .filter-row { gap: 0.4rem; }
       .filter-pill { font-size: 0.65rem; padding: 0.25rem 0.6rem; }
@@ -272,6 +360,12 @@
 <body>
 
 <div class="spotlight" id="spotlight"></div>
+
+<!-- ─── Image Preview Modal ─── -->
+<div class="modal-overlay" id="imageModal" onclick="closeModal()">
+  <button class="modal-close" onclick="closeModal()">✕</button>
+  <img class="modal-img" id="modalImg" src="" alt="Preview" onclick="event.stopPropagation()" />
+</div>
 
 <div class="wrapper">
   <a href="index.html" class="back-link">
@@ -300,6 +394,7 @@
       <tr>
         <th>Year</th>
         <th>Project</th>
+        <th>Preview</th>
         <th class="hide-mobile">Made at</th>
         <th class="hide-mobile">Built with</th>
         <th>Link</th>
@@ -316,6 +411,10 @@
 <script>
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  📝 EDIT YOUR ARCHIVE DATA BELOW                               ║
+// ║                                                                  ║
+// ║  For images: put screenshots in your assets/ folder and         ║
+// ║  set image: "assets/filename.png"                               ║
+// ║  Leave image: "" for no thumbnail (shows placeholder)           ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 const ARCHIVE = [
@@ -325,7 +424,8 @@ const ARCHIVE = [
     madeAt: "Freelance",
     tech: ["React", "Firebase", "Tailwind CSS"],
     link: "https://yourusername.github.io/project-one",
-    linkLabel: "project-one.github.io"
+    linkLabel: "project-one.github.io",
+    image: "assets/project1.png"        // ← add your screenshot path here
   },
   {
     year: 2025,
@@ -333,7 +433,8 @@ const ARCHIVE = [
     madeAt: "Freelance",
     tech: ["TypeScript", "D3.js", "Node.js"],
     link: "https://yourusername.github.io/project-two",
-    linkLabel: "project-two.github.io"
+    linkLabel: "project-two.github.io",
+    image: "assets/project2.png"
   },
   {
     year: 2024,
@@ -341,7 +442,8 @@ const ARCHIVE = [
     madeAt: "Company Name",
     tech: ["Node.js", "Commander", "EJS"],
     link: "https://yourusername.github.io/project-three",
-    linkLabel: "project-three.github.io"
+    linkLabel: "project-three.github.io",
+    image: "assets/project3.png"
   },
   {
     year: 2024,
@@ -349,7 +451,8 @@ const ARCHIVE = [
     madeAt: "Company Name",
     tech: ["TypeScript", "VS Code API"],
     link: "https://github.com/yourusername/project-four",
-    linkLabel: "GitHub ↗"
+    linkLabel: "GitHub ↗",
+    image: ""                            // ← empty = shows placeholder
   },
   {
     year: 2023,
@@ -357,7 +460,8 @@ const ARCHIVE = [
     madeAt: "",
     tech: ["Python", "Flask", "PostgreSQL"],
     link: "https://yourusername.github.io/project-five",
-    linkLabel: "project-five.github.io"
+    linkLabel: "project-five.github.io",
+    image: "assets/project5.png"
   },
   {
     year: 2023,
@@ -365,7 +469,8 @@ const ARCHIVE = [
     madeAt: "Hackathon",
     tech: ["React", "Express", "MongoDB"],
     link: "https://github.com/yourusername/project-six",
-    linkLabel: "GitHub ↗"
+    linkLabel: "GitHub ↗",
+    image: ""
   },
   {
     year: 2022,
@@ -373,7 +478,8 @@ const ARCHIVE = [
     madeAt: "",
     tech: ["HTML", "CSS", "JavaScript"],
     link: "https://yourusername.github.io",
-    linkLabel: "yourusername.github.io"
+    linkLabel: "yourusername.github.io",
+    image: ""
   },
   {
     year: 2022,
@@ -381,7 +487,8 @@ const ARCHIVE = [
     madeAt: "",
     tech: ["React", "OpenWeather API"],
     link: "https://yourusername.github.io/weather",
-    linkLabel: "weather.github.io"
+    linkLabel: "weather.github.io",
+    image: ""
   },
   {
     year: 2021,
@@ -389,34 +496,51 @@ const ARCHIVE = [
     madeAt: "",
     tech: ["HTML", "CSS"],
     link: "",
-    linkLabel: ""
+    linkLabel: "",
+    image: ""
   }
 ];
 
 
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  ⚙️  RENDERING + FILTERING ENGINE                              ║
+// ║  ⚙️  RENDERING + FILTERING + IMAGE PREVIEW                     ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 let activeYears = new Set();
 let activeTechs = new Set();
 
-// Extract unique years (descending) & techs (alphabetical) from data
 const allYears = [...new Set(ARCHIVE.map(p => p.year))].sort((a, b) => b - a);
 const allTechs = [...new Set(ARCHIVE.flatMap(p => p.tech))].sort();
+
+// ─── Image Modal ───
+function openModal(src) {
+  const modal = document.getElementById('imageModal');
+  const img = document.getElementById('modalImg');
+  img.src = src;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('imageModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Close on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
 
 // ─── Build filter pills ───
 function buildFilterPills() {
   const yearContainer = document.getElementById('yearFilters');
   const techContainer = document.getElementById('techFilters');
 
-  // Year: "All" + each year
   yearContainer.appendChild(createPill('All', () => { activeYears.clear(); refreshFilters(); }, 'year-all'));
   allYears.forEach(year => {
     yearContainer.appendChild(createPill(year, () => toggleFilter('year', year), `year-${year}`));
   });
 
-  // Tech: "All" + each tech
   techContainer.appendChild(createPill('All', () => { activeTechs.clear(); refreshFilters(); }, 'tech-all'));
   allTechs.forEach(tech => {
     techContainer.appendChild(createPill(tech, () => toggleFilter('tech', tech), `tech-${tech}`));
@@ -445,7 +569,6 @@ function clearAllFilters() {
 }
 
 function refreshFilters() {
-  // Update pill active states
   document.querySelectorAll('#yearFilters .filter-pill').forEach(pill => {
     const id = pill.dataset.filterId;
     pill.classList.toggle('active', id === 'year-all' ? activeYears.size === 0 : activeYears.has(parseInt(id.replace('year-', ''))));
@@ -456,7 +579,6 @@ function refreshFilters() {
     pill.classList.toggle('active', id === 'tech-all' ? activeTechs.size === 0 : activeTechs.has(id.replace('tech-', '')));
   });
 
-  // Filter rows
   const rows = document.querySelectorAll('#archiveBody tr');
   let visibleCount = 0;
 
@@ -468,13 +590,11 @@ function refreshFilters() {
     row.classList.toggle('hidden', !(yearOk && techOk));
     if (yearOk && techOk) visibleCount++;
 
-    // Highlight matching tech tags
     row.querySelectorAll('.tag').forEach(tag => {
       tag.classList.toggle('tag-highlighted', activeTechs.size > 0 && activeTechs.has(tag.textContent));
     });
   });
 
-  // Update count + clear button
   const hasFilters = activeYears.size > 0 || activeTechs.size > 0;
   document.getElementById('filterCount').textContent = hasFilters
     ? `Showing ${visibleCount} of ${ARCHIVE.length} projects`
@@ -488,17 +608,30 @@ const tbody = document.getElementById('archiveBody');
 ARCHIVE.forEach(item => {
   const tr = document.createElement('tr');
   const techTags = item.tech.map(t => `<span class="tag">${t}</span>`).join('');
+
   let linkHTML = '';
   if (item.link) {
     linkHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.linkLabel || item.link} <span class="arrow-icon">↗</span></a>`;
   }
+
+  let imageHTML = '';
+  if (item.image) {
+    imageHTML = `<img class="project-thumb" src="${item.image}" alt="${item.project}" 
+      onclick="openModal('${item.image}')" style="cursor:zoom-in;" 
+      onerror="this.outerHTML='<div class=\\'thumb-placeholder\\'>No img</div>'" />`;
+  } else {
+    imageHTML = `<div class="thumb-placeholder">—</div>`;
+  }
+
   tr.innerHTML = `
     <td class="col-year">${item.year}</td>
     <td class="col-project">${item.project}</td>
+    <td class="col-image">${imageHTML}</td>
     <td class="col-made-at hide-mobile">${item.madeAt}</td>
     <td class="col-tech hide-mobile"><div class="tags">${techTags}</div></td>
     <td class="col-link">${linkHTML}</td>
   `;
+
   tbody.appendChild(tr);
 });
 
