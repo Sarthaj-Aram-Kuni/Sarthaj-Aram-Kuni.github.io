@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Projects — Your Name</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #5eead4;
+      --accent-dim: rgba(94, 234, 212, 0.1);
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .spotlight {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 3rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ─── Back Link ─── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      transition: opacity 0.2s;
+    }
+
+    .back-link:hover { opacity: 0.8; }
+
+    .back-link .arrow { transition: transform 0.2s; }
+    .back-link:hover .arrow { transform: translateX(-4px); }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      margin-bottom: 3rem;
+    }
+
+    /* ─── Table ─── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+      transition: background 0.2s;
+    }
+
+    tbody tr:hover { background: rgba(30, 41, 59, 0.4); }
+
+    td {
+      padding: 1rem;
+      vertical-align: top;
+    }
+
+    .col-year {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      width: 70px;
+    }
+
+    .col-project {
+      font-weight: 500;
+      color: var(--text-primary);
+      min-width: 200px;
+    }
+
+    .col-made-at {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .col-tech {
+      min-width: 250px;
+    }
+
+    .col-link a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+
+    .col-link a:hover { color: var(--accent); }
+
+    .col-link .arrow-icon {
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    tbody tr:hover .col-link .arrow-icon { transform: translate(2px, -2px); }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+    .tag {
+      font-size: 0.68rem;
+      font-weight: 500;
+      font-family: var(--font-mono);
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 768px) {
+      .wrapper { padding: 3rem 1.5rem; }
+      h1 { font-size: 2rem; }
+
+      .hide-mobile { display: none; }
+
+      td, th { padding: 0.75rem 0.5rem; }
+
+      .col-project { min-width: 140px; }
+      .col-tech { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="spotlight" id="spotlight"></div>
+
+<div class="wrapper">
+  <a href="index.html" class="back-link">
+    <span class="arrow">←</span> Your Name
+  </a>
+  <h1>All Projects</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Project</th>
+        <th class="hide-mobile">Made at</th>
+        <th class="hide-mobile">Built with</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody id="archiveBody"></tbody>
+  </table>
+</div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  📝 EDIT YOUR ARCHIVE DATA BELOW                               ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+const ARCHIVE = [
+  {
+    year: 2025,
+    project: "Project One",
+    madeAt: "Freelance",
+    tech: ["React", "Firebase", "Tailwind CSS"],
+    link: "https://yourusername.github.io/project-one",
+    linkLabel: "project-one.github.io"  // display text for link
+  },
+  {
+    year: 2025,
+    project: "Project Two",
+    madeAt: "Freelance",
+    tech: ["TypeScript", "D3.js", "Node.js"],
+    link: "https://yourusername.github.io/project-two",
+    linkLabel: "project-two.github.io"
+  },
+  {
+    year: 2024,
+    project: "Project Three",
+    madeAt: "Company Name",
+    tech: ["Node.js", "Commander", "EJS"],
+    link: "https://yourusername.github.io/project-three",
+    linkLabel: "project-three.github.io"
+  },
+  {
+    year: 2024,
+    project: "Project Four",
+    madeAt: "Company Name",
+    tech: ["TypeScript", "VS Code API"],
+    link: "https://github.com/yourusername/project-four",
+    linkLabel: "GitHub ↗"
+  },
+  {
+    year: 2023,
+    project: "Project Five",
+    madeAt: "",
+    tech: ["Python", "Flask", "PostgreSQL"],
+    link: "https://yourusername.github.io/project-five",
+    linkLabel: "project-five.github.io"
+  },
+  {
+    year: 2023,
+    project: "Project Six",
+    madeAt: "Hackathon",
+    tech: ["React", "Express", "MongoDB"],
+    link: "https://github.com/yourusername/project-six",
+    linkLabel: "GitHub ↗"
+  },
+  {
+    year: 2022,
+    project: "Personal Website V2",
+    madeAt: "",
+    tech: ["HTML", "CSS", "JavaScript"],
+    link: "https://yourusername.github.io",
+    linkLabel: "yourusername.github.io"
+  },
+  {
+    year: 2022,
+    project: "Weather App",
+    madeAt: "",
+    tech: ["React", "OpenWeather API"],
+    link: "https://yourusername.github.io/weather",
+    linkLabel: "weather.github.io"
+  },
+  {
+    year: 2021,
+    project: "Personal Website V1",
+    madeAt: "",
+    tech: ["HTML", "CSS"],
+    link: "",
+    linkLabel: ""
+  }
+];
+
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ⚙️  RENDERING — No need to edit below                         ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+const tbody = document.getElementById('archiveBody');
+
+ARCHIVE.forEach(item => {
+  const tr = document.createElement('tr');
+
+  const techTags = item.tech.map(t => `<span class="tag">${t}</span>`).join('');
+
+  let linkHTML = '';
+  if (item.link) {
+    linkHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer">
+      ${item.linkLabel || item.link} <span class="arrow-icon">↗</span>
+    </a>`;
+  }
+
+  tr.innerHTML = `
+    <td class="col-year">${item.year}</td>
+    <td class="col-project">${item.project}</td>
+    <td class="col-made-at hide-mobile">${item.madeAt}</td>
+    <td class="col-tech hide-mobile"><div class="tags">${techTags}</div></td>
+    <td class="col-link">${linkHTML}</td>
+  `;
+
+  tbody.appendChild(tr);
+});
+
+// Update back link & title
+document.title = `All Projects — Your Name`;
+
+// Spotlight
+const spotlight = document.getElementById('spotlight');
+document.addEventListener('mousemove', e => {
+  spotlight.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(29, 78, 216, 0.07), transparent 80%)`;
+});
+</script>
+</body>
+</html>

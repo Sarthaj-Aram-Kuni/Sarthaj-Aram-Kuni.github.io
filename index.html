@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name — Portfolio</title>
+  <meta name="description" content="Developer portfolio" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── CSS Variables ─── */
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card-hover: rgba(30, 41, 59, 0.5);
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #5eead4;
+      --accent-dim: rgba(94, 234, 212, 0.1);
+      --accent-mid: rgba(94, 234, 212, 0.2);
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    /* ─── Reset ─── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ─── Spotlight ─── */
+    .spotlight {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      transition: background 0.3s;
+    }
+
+    /* ─── Layout ─── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 4rem;
+      padding: 6rem 3rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ─── Sidebar ─── */
+    .sidebar {
+      position: sticky;
+      top: 6rem;
+      width: 420px;
+      flex-shrink: 0;
+      height: fit-content;
+      padding-bottom: 2rem;
+    }
+
+    .sidebar h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .sidebar .role {
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-top: 0.6rem;
+    }
+
+    .sidebar .tagline {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      max-width: 300px;
+      line-height: 1.6;
+    }
+
+    /* ─── Nav ─── */
+    .nav { margin-top: 3.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.5rem 0;
+      transition: color 0.3s;
+    }
+
+    .nav a::before {
+      content: '';
+      width: 30px;
+      height: 1px;
+      background: var(--text-muted);
+      transition: width 0.3s, background 0.3s;
+    }
+
+    .nav a:hover, .nav a.active {
+      color: var(--text-primary);
+    }
+
+    .nav a:hover::before, .nav a.active::before {
+      width: 60px;
+      background: var(--text-primary);
+    }
+
+    /* ─── Socials ─── */
+    .socials {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 3.5rem;
+      align-items: center;
+    }
+
+    .socials a {
+      color: var(--text-muted);
+      transition: color 0.3s;
+      display: flex;
+      align-items: center;
+    }
+
+    .socials a:hover { color: var(--text-primary); }
+
+    .socials svg { width: 22px; height: 22px; fill: currentColor; }
+
+    /* ─── Main Content ─── */
+    .content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    section { margin-bottom: 6rem; }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-bottom: 2.5rem;
+      display: none;
+    }
+
+    /* ─── About ─── */
+    .about p {
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .about a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+      border-bottom: 1px solid transparent;
+    }
+
+    .about a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ─── Experience Card ─── */
+    .exp-card {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      margin: 0 -1.5rem;
+      border-radius: 8px;
+      transition: background 0.3s, box-shadow 0.3s;
+      cursor: default;
+      text-decoration: none;
+      color: inherit;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-card:hover {
+      background: var(--bg-card-hover);
+      box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.1);
+    }
+
+    .exp-card:hover .exp-title { color: var(--accent); }
+    .exp-card:hover .arrow-icon { transform: translate(3px, -3px); }
+
+    .exp-date {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      min-width: 120px;
+      padding-top: 0.35rem;
+      font-family: var(--font-mono);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .exp-info { flex: 1; }
+
+    .exp-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .arrow-icon {
+      display: inline-block;
+      transition: transform 0.2s;
+      font-size: 0.85rem;
+    }
+
+    .exp-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.1rem;
+    }
+
+    .exp-desc {
+      font-size: 0.88rem;
+      margin-top: 0.5rem;
+      line-height: 1.6;
+    }
+
+    .exp-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+      font-size: 0.78rem;
+    }
+
+    .exp-links span {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .exp-links span::before { content: '▸ '; color: var(--accent); }
+
+    /* ─── Tech tags ─── */
+    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.85rem; }
+
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      font-family: var(--font-mono);
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    /* ─── Project Cards ─── */
+    .project-card {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      margin: 0 -1.5rem;
+      border-radius: 8px;
+      transition: background 0.3s, box-shadow 0.3s;
+      text-decoration: none;
+      color: inherit;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-card:hover {
+      background: var(--bg-card-hover);
+      box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.1);
+    }
+
+    .project-card:hover .project-title { color: var(--accent); }
+    .project-card:hover .arrow-icon { transform: translate(3px, -3px); }
+    .project-card:hover .project-img { border-color: rgba(94, 234, 212, 0.3); }
+
+    .project-img {
+      width: 120px;
+      height: 72px;
+      border-radius: 4px;
+      border: 2px solid var(--bg-secondary);
+      object-fit: cover;
+      flex-shrink: 0;
+      transition: border-color 0.3s;
+      background: var(--bg-secondary);
+    }
+
+    .project-info { flex: 1; }
+
+    .project-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .project-desc {
+      font-size: 0.88rem;
+      margin-top: 0.3rem;
+      line-height: 1.6;
+    }
+
+    .project-stats {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* ─── Resume / Archive link ─── */
+    .view-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-primary);
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+      transition: color 0.2s;
+    }
+
+    .view-link:hover { color: var(--accent); }
+    .view-link:hover .arrow-icon { transform: translate(3px, -3px); }
+
+    .view-link .arrow-icon { transition: transform 0.2s; }
+
+    /* ─── Footer ─── */
+    .footer {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      padding-top: 2rem;
+    }
+
+    .footer a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer a:hover { color: var(--accent); }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 900px) {
+      .container {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 3rem 1.5rem;
+      }
+
+      .sidebar {
+        position: relative;
+        top: 0;
+        width: 100%;
+      }
+
+      .nav { display: none; }
+
+      .section-label { display: block; }
+
+      .sidebar h1 { font-size: 2.2rem; }
+
+      .exp-card, .project-card { flex-direction: column; gap: 0.8rem; }
+
+      .project-img { width: 100%; height: auto; max-width: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="spotlight" id="spotlight"></div>
+
+<div class="container">
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar">
+    <h1 id="sidebarName">Your Name</h1>
+    <p class="role" id="sidebarRole">Full Stack Developer</p>
+    <p class="tagline" id="sidebarTagline">I build clean, performant, and accessible digital experiences for the web.</p>
+
+    <nav class="nav" id="mainNav">
+      <a href="#about" class="active">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+    </nav>
+
+    <div class="socials" id="socials"></div>
+  </aside>
+
+  <!-- ══════════ CONTENT ══════════ -->
+  <main class="content">
+
+    <!-- ABOUT -->
+    <section id="about">
+      <h2 class="section-label">About</h2>
+      <div class="about" id="aboutContent"></div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <h2 class="section-label">Experience</h2>
+      <div id="experienceContent"></div>
+      <a href="#" class="view-link" id="resumeLink" style="display:none;">
+        View Full Résumé <span class="arrow-icon">↗</span>
+      </a>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <h2 class="section-label">Projects</h2>
+      <div id="projectsContent"></div>
+      <a href="archive.html" class="view-link" style="margin-top:2rem;">
+        View Full Project Archive <span class="arrow-icon">→</span>
+      </a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer" id="footerContent"></footer>
+
+  </main>
+</div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  📝 EDIT YOUR DATA BELOW — This is the only part you change!   ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+const DATA = {
+
+  // ─── Personal Info ───
+  name: "Your Name",
+  role: "Full Stack Developer",
+  tagline: "I build clean, performant, and accessible digital experiences for the web.",
+
+  // ─── About (supports HTML) ───
+  about: [
+    `I'm a passionate developer focused on building web applications that combine 
+     great user experience with solid engineering. I enjoy working at the intersection 
+     of design and development, creating things that look good and work well.`,
+
+    `Currently, I'm a developer at <a href="#">Company Name</a>, where I build 
+     and maintain features across the full stack. My focus is on writing clean, 
+     accessible code and delivering polished user experiences.`,
+
+    `In my free time, I'm usually exploring new technologies, contributing to 
+     open source, or working on personal projects. When I'm not coding, you can 
+     find me reading, gaming, or hiking.`
+  ],
+
+  // ─── Social Links ───
+  // Supported types: github, linkedin, twitter, instagram, codepen, email
+  socials: [
+    { type: "github",   url: "https://github.com/yourusername" },
+    { type: "linkedin", url: "https://linkedin.com/in/yourusername" },
+    { type: "twitter",  url: "https://twitter.com/yourusername" },
+    { type: "email",    url: "mailto:you@email.com" }
+  ],
+
+  // ─── Resume link (set to "" to hide) ───
+  resumeUrl: "/resume.pdf",
+
+  // ─── Experience ───
+  experience: [
+    {
+      date: "2023 — Present",
+      title: "Senior Developer",
+      company: "Company Name",
+      companyUrl: "https://company.com",
+      subtitle: "", // optional: "Previously: Junior Developer"
+      description: "Build and maintain critical features across the full stack. Work closely with designers, product managers, and other developers to deliver high-quality web applications used by thousands of users.",
+      links: [], // optional: [{ label: "Project X", url: "#" }]
+      tech: ["JavaScript", "TypeScript", "React", "Node.js", "PostgreSQL"]
+    },
+    {
+      date: "2021 — 2023",
+      title: "Frontend Developer",
+      company: "Another Company",
+      companyUrl: "https://another.com",
+      subtitle: "",
+      description: "Developed user-facing features for a SaaS platform. Collaborated with the design team to implement responsive, accessible interfaces. Improved page load times by 40% through optimization work.",
+      links: [],
+      tech: ["React", "TypeScript", "Tailwind CSS", "GraphQL"]
+    },
+    {
+      date: "2019 — 2021",
+      title: "Junior Developer",
+      company: "Startup Inc",
+      companyUrl: "https://startup.com",
+      subtitle: "",
+      description: "Built features for client-facing web applications. Worked across the stack using modern JavaScript frameworks. Gained experience with agile methodologies and collaborative development.",
+      links: [],
+      tech: ["JavaScript", "Vue.js", "SCSS", "Firebase"]
+    }
+  ],
+
+  // ─── Featured Projects (shown on main page) ───
+  featuredProjects: [
+    {
+      title: "Project One",
+      url: "https://yourusername.github.io/project-one",
+      description: "A full-stack web application for managing tasks with real-time collaboration features. Built with React and Firebase.",
+      image: "assets/project1.png",  // put screenshots in assets/ folder
+      tech: ["React", "Firebase", "Tailwind CSS"],
+      stats: { stars: 128, installs: "" }  // leave empty string to hide
+    },
+    {
+      title: "Project Two",
+      url: "https://yourusername.github.io/project-two",
+      description: "A responsive dashboard for visualizing analytics data with interactive charts and customizable widgets.",
+      image: "assets/project2.png",
+      tech: ["TypeScript", "D3.js", "Node.js"],
+      stats: { stars: 64, installs: "" }
+    },
+    {
+      title: "Project Three",
+      url: "https://yourusername.github.io/project-three",
+      description: "A CLI tool for scaffolding new web projects with customizable templates and built-in best practices.",
+      image: "assets/project3.png",
+      tech: ["Node.js", "Commander", "EJS"],
+      stats: { stars: "", installs: "500+ downloads" }
+    },
+    {
+      title: "Project Four",
+      url: "https://yourusername.github.io/project-four",
+      description: "An open-source VS Code extension for enhancing productivity with custom snippets and shortcuts.",
+      image: "assets/project4.png",
+      tech: ["TypeScript", "VS Code API"],
+      stats: { stars: 42, installs: "1k+ installs" }
+    }
+  ],
+
+  // ─── Footer ───
+  footer: `Loosely designed in <a href="https://www.figma.com/" target="_blank">Figma</a> and coded in 
+           <a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a>. 
+           Built with vanilla HTML, CSS &amp; JS and hosted on 
+           <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.`
+};
+
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ⚙️  RENDERING ENGINE — No need to edit below this line        ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+const SOCIAL_ICONS = {
+  github: `<svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 17.07 3.633 16.7 3.633 16.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>`,
+  linkedin: `<svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`,
+  twitter: `<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
+  instagram: `<svg viewBox="0 0 24 24"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 100 12.324 6.162 6.162 0 100-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 11-2.882 0 1.441 1.441 0 012.882 0z"/></svg>`,
+  codepen: `<svg viewBox="0 0 24 24"><path d="M18.144 13.067v-2.134L16.55 12zm1.848 1.032L24 11.457V6.093l-4.008-2.746L12 9.066 3.99 3.347.009 6.093V11.457l4.008 2.642L12 8.458l7.992 5.641 4.008-2.642zm-7.992-5.641V2.066L4.008 7.707v4.134L12 6.2zm0 11.7l7.992-5.641V10.383L12 16l-7.992-5.617v4.134L12 20.158zM5.856 13.067L4.008 12l1.848-1.067v2.134z"/></svg>`,
+  email: `<svg viewBox="0 0 24 24"><path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z"/><path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z"/></svg>`
+};
+
+// ─── Render Sidebar ───
+document.getElementById('sidebarName').textContent = DATA.name;
+document.getElementById('sidebarRole').textContent = DATA.role;
+document.getElementById('sidebarTagline').textContent = DATA.tagline;
+document.title = `${DATA.name} — Portfolio`;
+
+// ─── Render Socials ───
+const socialsEl = document.getElementById('socials');
+DATA.socials.forEach(s => {
+  const a = document.createElement('a');
+  a.href = s.url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.setAttribute('aria-label', s.type);
+  a.innerHTML = SOCIAL_ICONS[s.type] || '';
+  socialsEl.appendChild(a);
+});
+
+// ─── Render About ───
+const aboutEl = document.getElementById('aboutContent');
+DATA.about.forEach(p => {
+  const el = document.createElement('p');
+  el.innerHTML = p;
+  aboutEl.appendChild(el);
+});
+
+// ─── Render Experience ───
+const expEl = document.getElementById('experienceContent');
+DATA.experience.forEach(exp => {
+  const card = document.createElement('a');
+  card.className = 'exp-card';
+  card.href = exp.companyUrl || '#';
+  card.target = '_blank';
+  card.rel = 'noopener noreferrer';
+
+  let linksHTML = '';
+  if (exp.links && exp.links.length) {
+    linksHTML = `<div class="exp-links">${exp.links.map(l => `<span>${l.label}</span>`).join('')}</div>`;
+  }
+
+  let subtitleHTML = '';
+  if (exp.subtitle) {
+    subtitleHTML = `<p class="exp-subtitle">${exp.subtitle}</p>`;
+  }
+
+  card.innerHTML = `
+    <div class="exp-date">${exp.date}</div>
+    <div class="exp-info">
+      <h3 class="exp-title">${exp.title} · ${exp.company} <span class="arrow-icon">↗</span></h3>
+      ${subtitleHTML}
+      <p class="exp-desc">${exp.description}</p>
+      ${linksHTML}
+      <div class="tags">${exp.tech.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+  `;
+  expEl.appendChild(card);
+});
+
+// Resume link
+if (DATA.resumeUrl) {
+  const rLink = document.getElementById('resumeLink');
+  rLink.href = DATA.resumeUrl;
+  rLink.target = '_blank';
+  rLink.style.display = 'inline-flex';
+}
+
+// ─── Render Featured Projects ───
+const projEl = document.getElementById('projectsContent');
+DATA.featuredProjects.forEach(proj => {
+  const card = document.createElement('a');
+  card.className = 'project-card';
+  card.href = proj.url;
+  card.target = '_blank';
+  card.rel = 'noopener noreferrer';
+
+  let statsHTML = '';
+  const statParts = [];
+  if (proj.stats.stars) statParts.push(`★ ${proj.stats.stars}`);
+  if (proj.stats.installs) statParts.push(proj.stats.installs);
+  if (statParts.length) {
+    statsHTML = `<div class="project-stats">${statParts.map(s => `<span>${s}</span>`).join('')}</div>`;
+  }
+
+  card.innerHTML = `
+    <img class="project-img" src="${proj.image}" alt="${proj.title}" onerror="this.style.display='none'" />
+    <div class="project-info">
+      <h3 class="project-title">${proj.title} <span class="arrow-icon">↗</span></h3>
+      <p class="project-desc">${proj.description}</p>
+      ${statsHTML}
+      <div class="tags">${proj.tech.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+  `;
+  projEl.appendChild(card);
+});
+
+// ─── Footer ───
+document.getElementById('footerContent').innerHTML = DATA.footer;
+
+// ─── Spotlight effect ───
+const spotlight = document.getElementById('spotlight');
+document.addEventListener('mousemove', e => {
+  spotlight.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(29, 78, 216, 0.07), transparent 80%)`;
+});
+
+// ─── Active nav on scroll ───
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav a');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
