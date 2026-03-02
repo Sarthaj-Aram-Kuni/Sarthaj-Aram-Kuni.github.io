@@ -16,6 +16,7 @@
       --text-muted: #64748b;
       --accent: #5eead4;
       --accent-dim: rgba(94, 234, 212, 0.1);
+      --accent-mid: rgba(94, 234, 212, 0.2);
       --font-body: 'Outfit', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
@@ -59,7 +60,6 @@
     }
 
     .back-link:hover { opacity: 0.8; }
-
     .back-link .arrow { transition: transform 0.2s; }
     .back-link:hover .arrow { transform: translateX(-4px); }
 
@@ -68,8 +68,88 @@
       font-weight: 700;
       color: var(--text-primary);
       letter-spacing: -0.03em;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
     }
+
+    /* ─── Filters ─── */
+    .filters {
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      min-width: 44px;
+    }
+
+    .filter-pill {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .filter-pill:hover {
+      border-color: rgba(94, 234, 212, 0.3);
+      color: var(--text-secondary);
+      background: rgba(94, 234, 212, 0.05);
+    }
+
+    .filter-pill.active {
+      background: var(--accent-dim);
+      border-color: rgba(94, 234, 212, 0.4);
+      color: var(--accent);
+    }
+
+    .filter-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .filter-count {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .clear-filters {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.3rem 0.5rem;
+      transition: color 0.2s;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      display: none;
+    }
+
+    .clear-filters.visible { display: inline-block; }
+    .clear-filters:hover { color: var(--accent); }
 
     /* ─── Table ─── */
     table {
@@ -90,10 +170,11 @@
 
     tbody tr {
       border-bottom: 1px solid rgba(148, 163, 184, 0.05);
-      transition: background 0.2s;
+      transition: background 0.2s, opacity 0.3s;
     }
 
     tbody tr:hover { background: rgba(30, 41, 59, 0.4); }
+    tbody tr.hidden { display: none; }
 
     td {
       padding: 1rem;
@@ -120,9 +201,7 @@
       white-space: nowrap;
     }
 
-    .col-tech {
-      min-width: 250px;
-    }
+    .col-tech { min-width: 250px; }
 
     .col-link a {
       color: var(--text-secondary);
@@ -155,7 +234,24 @@
       background: var(--accent-dim);
       color: var(--accent);
       white-space: nowrap;
+      transition: all 0.25s ease;
     }
+
+    .tag.tag-highlighted {
+      background: var(--accent-mid);
+      box-shadow: 0 0 0 1px rgba(94, 234, 212, 0.35);
+    }
+
+    /* ─── No Results ─── */
+    .no-results {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .no-results.visible { display: block; }
 
     /* ─── Mobile ─── */
     @media (max-width: 768px) {
@@ -165,9 +261,11 @@
       .hide-mobile { display: none; }
 
       td, th { padding: 0.75rem 0.5rem; }
-
       .col-project { min-width: 140px; }
       .col-tech { min-width: 0; }
+
+      .filter-row { gap: 0.4rem; }
+      .filter-pill { font-size: 0.65rem; padding: 0.25rem 0.6rem; }
     }
   </style>
 </head>
@@ -181,6 +279,22 @@
   </a>
   <h1>All Projects</h1>
 
+  <!-- ─── Filters ─── -->
+  <div class="filters">
+    <div class="filter-row">
+      <span class="filter-label">Year</span>
+      <div id="yearFilters"></div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Tech</span>
+      <div id="techFilters"></div>
+    </div>
+    <div class="filter-meta">
+      <span class="filter-count" id="filterCount"></span>
+      <button class="clear-filters" id="clearBtn" onclick="clearAllFilters()">Clear all filters</button>
+    </div>
+  </div>
+
   <table>
     <thead>
       <tr>
@@ -193,6 +307,10 @@
     </thead>
     <tbody id="archiveBody"></tbody>
   </table>
+
+  <div class="no-results" id="noResults">
+    No projects match the selected filters.
+  </div>
 </div>
 
 <script>
@@ -207,7 +325,7 @@ const ARCHIVE = [
     madeAt: "Freelance",
     tech: ["React", "Firebase", "Tailwind CSS"],
     link: "https://yourusername.github.io/project-one",
-    linkLabel: "project-one.github.io"  // display text for link
+    linkLabel: "project-one.github.io"
   },
   {
     year: 2025,
@@ -277,23 +395,103 @@ const ARCHIVE = [
 
 
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  ⚙️  RENDERING — No need to edit below                         ║
+// ║  ⚙️  RENDERING + FILTERING ENGINE                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
-const tbody = document.getElementById('archiveBody');
+let activeYears = new Set();
+let activeTechs = new Set();
 
+// Extract unique years (descending) & techs (alphabetical) from data
+const allYears = [...new Set(ARCHIVE.map(p => p.year))].sort((a, b) => b - a);
+const allTechs = [...new Set(ARCHIVE.flatMap(p => p.tech))].sort();
+
+// ─── Build filter pills ───
+function buildFilterPills() {
+  const yearContainer = document.getElementById('yearFilters');
+  const techContainer = document.getElementById('techFilters');
+
+  // Year: "All" + each year
+  yearContainer.appendChild(createPill('All', () => { activeYears.clear(); refreshFilters(); }, 'year-all'));
+  allYears.forEach(year => {
+    yearContainer.appendChild(createPill(year, () => toggleFilter('year', year), `year-${year}`));
+  });
+
+  // Tech: "All" + each tech
+  techContainer.appendChild(createPill('All', () => { activeTechs.clear(); refreshFilters(); }, 'tech-all'));
+  allTechs.forEach(tech => {
+    techContainer.appendChild(createPill(tech, () => toggleFilter('tech', tech), `tech-${tech}`));
+  });
+}
+
+function createPill(label, onClick, id) {
+  const btn = document.createElement('button');
+  btn.className = 'filter-pill';
+  btn.textContent = label;
+  btn.dataset.filterId = id;
+  btn.addEventListener('click', onClick);
+  return btn;
+}
+
+function toggleFilter(type, value) {
+  const set = type === 'year' ? activeYears : activeTechs;
+  set.has(value) ? set.delete(value) : set.add(value);
+  refreshFilters();
+}
+
+function clearAllFilters() {
+  activeYears.clear();
+  activeTechs.clear();
+  refreshFilters();
+}
+
+function refreshFilters() {
+  // Update pill active states
+  document.querySelectorAll('#yearFilters .filter-pill').forEach(pill => {
+    const id = pill.dataset.filterId;
+    pill.classList.toggle('active', id === 'year-all' ? activeYears.size === 0 : activeYears.has(parseInt(id.replace('year-', ''))));
+  });
+
+  document.querySelectorAll('#techFilters .filter-pill').forEach(pill => {
+    const id = pill.dataset.filterId;
+    pill.classList.toggle('active', id === 'tech-all' ? activeTechs.size === 0 : activeTechs.has(id.replace('tech-', '')));
+  });
+
+  // Filter rows
+  const rows = document.querySelectorAll('#archiveBody tr');
+  let visibleCount = 0;
+
+  rows.forEach((row, i) => {
+    const item = ARCHIVE[i];
+    const yearOk = activeYears.size === 0 || activeYears.has(item.year);
+    const techOk = activeTechs.size === 0 || item.tech.some(t => activeTechs.has(t));
+
+    row.classList.toggle('hidden', !(yearOk && techOk));
+    if (yearOk && techOk) visibleCount++;
+
+    // Highlight matching tech tags
+    row.querySelectorAll('.tag').forEach(tag => {
+      tag.classList.toggle('tag-highlighted', activeTechs.size > 0 && activeTechs.has(tag.textContent));
+    });
+  });
+
+  // Update count + clear button
+  const hasFilters = activeYears.size > 0 || activeTechs.size > 0;
+  document.getElementById('filterCount').textContent = hasFilters
+    ? `Showing ${visibleCount} of ${ARCHIVE.length} projects`
+    : `${ARCHIVE.length} projects`;
+  document.getElementById('clearBtn').classList.toggle('visible', hasFilters);
+  document.getElementById('noResults').classList.toggle('visible', visibleCount === 0);
+}
+
+// ─── Render table ───
+const tbody = document.getElementById('archiveBody');
 ARCHIVE.forEach(item => {
   const tr = document.createElement('tr');
-
   const techTags = item.tech.map(t => `<span class="tag">${t}</span>`).join('');
-
   let linkHTML = '';
   if (item.link) {
-    linkHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer">
-      ${item.linkLabel || item.link} <span class="arrow-icon">↗</span>
-    </a>`;
+    linkHTML = `<a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.linkLabel || item.link} <span class="arrow-icon">↗</span></a>`;
   }
-
   tr.innerHTML = `
     <td class="col-year">${item.year}</td>
     <td class="col-project">${item.project}</td>
@@ -301,11 +499,13 @@ ARCHIVE.forEach(item => {
     <td class="col-tech hide-mobile"><div class="tags">${techTags}</div></td>
     <td class="col-link">${linkHTML}</td>
   `;
-
   tbody.appendChild(tr);
 });
 
-// Update back link & title
+// ─── Initialize ───
+buildFilterPills();
+refreshFilters();
+
 document.title = `All Projects — Your Name`;
 
 // Spotlight
