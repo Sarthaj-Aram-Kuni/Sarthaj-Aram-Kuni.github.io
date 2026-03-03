@@ -181,7 +181,7 @@
       border-bottom-color: var(--accent);
     }
 
-    /* ─── Experience Card ─── */
+    /* ─── Shared Card Style ─── */
     .exp-card {
       display: flex;
       gap: 1.5rem;
@@ -333,6 +333,43 @@
       font-family: var(--font-mono);
     }
 
+    /* ─── Education & Certificates Section ─── */
+    .subsection-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      margin-top: 2.5rem;
+      padding-left: 1.5rem;
+    }
+
+    .subsection-title:first-of-type {
+      margin-top: 0;
+    }
+
+    /* Certificate credential link */
+    .credential-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      text-decoration: none;
+      margin-top: 0.5rem;
+      transition: opacity 0.2s;
+    }
+
+    .credential-link:hover { opacity: 0.8; }
+
+    .credential-link svg {
+      width: 13px;
+      height: 13px;
+      fill: var(--accent);
+    }
+
     /* ─── Resume / Archive link ─── */
     .view-link {
       display: inline-flex;
@@ -408,6 +445,7 @@
       <a href="#about" class="active">About</a>
       <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
+      <a href="#education">Education & Certs</a>
     </nav>
 
     <div class="socials" id="socials"></div>
@@ -440,6 +478,15 @@
       </a>
     </section>
 
+    <!-- EDUCATION & CERTIFICATES -->
+    <section id="education">
+      <h2 class="section-label">Education & Certificates</h2>
+      <h3 class="subsection-title">Education</h3>
+      <div id="educationContent"></div>
+      <h3 class="subsection-title">Certificates</h3>
+      <div id="certificatesContent"></div>
+    </section>
+
     <!-- FOOTER -->
     <footer class="footer" id="footerContent"></footer>
 
@@ -454,8 +501,8 @@
 const DATA = {
 
   // ─── Personal Info ───
-  name: "Sarthaj Aram Kuni",
-  role: "Business / Data Analyst",
+  name: "Your Name",
+  role: "Full Stack Developer",
   tagline: "I build clean, performant, and accessible digital experiences for the web.",
 
   // ─── About (supports HTML) ───
@@ -492,9 +539,9 @@ const DATA = {
       title: "Senior Developer",
       company: "Company Name",
       companyUrl: "https://company.com",
-      subtitle: "", // optional: "Previously: Junior Developer"
+      subtitle: "",
       description: "Build and maintain critical features across the full stack. Work closely with designers, product managers, and other developers to deliver high-quality web applications used by thousands of users.",
-      links: [], // optional: [{ label: "Project X", url: "#" }]
+      links: [],
       tech: ["JavaScript", "TypeScript", "React", "Node.js", "PostgreSQL"]
     },
     {
@@ -525,9 +572,9 @@ const DATA = {
       title: "Project One",
       url: "https://yourusername.github.io/project-one",
       description: "A full-stack web application for managing tasks with real-time collaboration features. Built with React and Firebase.",
-      image: "assets/project1.png",  // put screenshots in assets/ folder
+      image: "assets/project1.png",
       tech: ["React", "Firebase", "Tailwind CSS"],
-      stats: { stars: 128, installs: "" }  // leave empty string to hide
+      stats: { stars: 128, installs: "" }
     },
     {
       title: "Project Two",
@@ -555,6 +602,57 @@ const DATA = {
     }
   ],
 
+  // ─── Education ───
+  education: [
+    {
+      date: "2019 — 2023",
+      degree: "Bachelor of Science in Computer Science",
+      school: "University Name",
+      schoolUrl: "https://university.edu",
+      description: "Focused on software engineering, data structures, and web development. Graduated with honors. Participated in hackathons and coding competitions.",
+      tags: ["Data Structures", "Algorithms", "Web Dev", "Databases"]
+    },
+    {
+      date: "2017 — 2019",
+      degree: "Higher Secondary Education",
+      school: "School Name",
+      schoolUrl: "",
+      description: "Completed with distinction in Mathematics and Computer Science.",
+      tags: ["Mathematics", "Computer Science"]
+    }
+  ],
+
+  // ─── Certificates ───
+  certificates: [
+    {
+      date: "2024",
+      title: "AWS Certified Solutions Architect",
+      issuer: "Amazon Web Services",
+      issuerUrl: "https://aws.amazon.com/certification/",
+      credentialUrl: "https://www.credly.com/badges/your-badge-id",  // link to verify — set "" to hide
+      description: "Validated expertise in designing distributed systems and deploying scalable applications on AWS.",
+      tags: ["AWS", "Cloud", "Architecture"]
+    },
+    {
+      date: "2023",
+      title: "Meta Front-End Developer Professional Certificate",
+      issuer: "Meta (Coursera)",
+      issuerUrl: "https://www.coursera.org",
+      credentialUrl: "https://coursera.org/verify/your-cert-id",
+      description: "Comprehensive program covering React, JavaScript, UX/UI principles, and responsive web design.",
+      tags: ["React", "JavaScript", "UX/UI"]
+    },
+    {
+      date: "2023",
+      title: "Google Data Analytics Certificate",
+      issuer: "Google (Coursera)",
+      issuerUrl: "https://www.coursera.org",
+      credentialUrl: "",
+      description: "Learned data analysis tools and techniques including SQL, R, Tableau, and spreadsheet analytics.",
+      tags: ["SQL", "R", "Tableau", "Data Analysis"]
+    }
+  ],
+
   // ─── Footer ───
   footer: `Loosely designed in <a href="https://www.figma.com/" target="_blank">Figma</a> and coded in 
            <a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a>. 
@@ -575,6 +673,8 @@ const SOCIAL_ICONS = {
   codepen: `<svg viewBox="0 0 24 24"><path d="M18.144 13.067v-2.134L16.55 12zm1.848 1.032L24 11.457V6.093l-4.008-2.746L12 9.066 3.99 3.347.009 6.093V11.457l4.008 2.642L12 8.458l7.992 5.641 4.008-2.642zm-7.992-5.641V2.066L4.008 7.707v4.134L12 6.2zm0 11.7l7.992-5.641V10.383L12 16l-7.992-5.617v4.134L12 20.158zM5.856 13.067L4.008 12l1.848-1.067v2.134z"/></svg>`,
   email: `<svg viewBox="0 0 24 24"><path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z"/><path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z"/></svg>`
 };
+
+const CERT_ICON = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>`;
 
 // ─── Render Sidebar ───
 document.getElementById('sidebarName').textContent = DATA.name;
@@ -669,6 +769,56 @@ DATA.featuredProjects.forEach(proj => {
     </div>
   `;
   projEl.appendChild(card);
+});
+
+// ─── Render Education ───
+const eduEl = document.getElementById('educationContent');
+DATA.education.forEach(edu => {
+  const card = document.createElement('a');
+  card.className = 'exp-card';
+  card.href = edu.schoolUrl || '#';
+  card.target = '_blank';
+  card.rel = 'noopener noreferrer';
+
+  card.innerHTML = `
+    <div class="exp-date">${edu.date}</div>
+    <div class="exp-info">
+      <h3 class="exp-title">${edu.degree} <span class="arrow-icon">↗</span></h3>
+      <p class="exp-subtitle">${edu.school}</p>
+      <p class="exp-desc">${edu.description}</p>
+      <div class="tags">${edu.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+  `;
+  eduEl.appendChild(card);
+});
+
+// ─── Render Certificates ───
+const certEl = document.getElementById('certificatesContent');
+DATA.certificates.forEach(cert => {
+  const card = document.createElement('a');
+  card.className = 'exp-card';
+  card.href = cert.issuerUrl || '#';
+  card.target = '_blank';
+  card.rel = 'noopener noreferrer';
+
+  let credentialHTML = '';
+  if (cert.credentialUrl) {
+    credentialHTML = `<a class="credential-link" href="${cert.credentialUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+      ${CERT_ICON} Show credential
+    </a>`;
+  }
+
+  card.innerHTML = `
+    <div class="exp-date">${cert.date}</div>
+    <div class="exp-info">
+      <h3 class="exp-title">${cert.title} <span class="arrow-icon">↗</span></h3>
+      <p class="exp-subtitle">${cert.issuer}</p>
+      <p class="exp-desc">${cert.description}</p>
+      ${credentialHTML}
+      <div class="tags">${cert.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+  `;
+  certEl.appendChild(card);
 });
 
 // ─── Footer ───
