@@ -116,14 +116,8 @@
       transition: width 0.3s, background 0.3s;
     }
 
-    .nav a:hover, .nav a.active {
-      color: var(--text-primary);
-    }
-
-    .nav a:hover::before, .nav a.active::before {
-      width: 60px;
-      background: var(--text-primary);
-    }
+    .nav a:hover, .nav a.active { color: var(--text-primary); }
+    .nav a:hover::before, .nav a.active::before { width: 60px; background: var(--text-primary); }
 
     /* ─── Socials ─── */
     .socials {
@@ -141,15 +135,10 @@
     }
 
     .socials a:hover { color: var(--text-primary); }
-
     .socials svg { width: 22px; height: 22px; fill: currentColor; }
 
     /* ─── Main Content ─── */
-    .content {
-      flex: 1;
-      min-width: 0;
-    }
-
+    .content { flex: 1; min-width: 0; }
     section { margin-bottom: 6rem; }
 
     .section-label {
@@ -163,10 +152,7 @@
     }
 
     /* ─── About ─── */
-    .about p {
-      margin-bottom: 1rem;
-      font-size: 0.95rem;
-    }
+    .about p { margin-bottom: 1rem; font-size: 0.95rem; }
 
     .about a {
       color: var(--text-primary);
@@ -176,10 +162,7 @@
       border-bottom: 1px solid transparent;
     }
 
-    .about a:hover {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
-    }
+    .about a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
     /* ─── Shared Card Style ─── */
     .exp-card {
@@ -252,11 +235,7 @@
       font-size: 0.78rem;
     }
 
-    .exp-links span {
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-    }
-
+    .exp-links span { color: var(--text-muted); font-family: var(--font-mono); }
     .exp-links span::before { content: '▸ '; color: var(--accent); }
 
     /* ─── Tech tags ─── */
@@ -333,7 +312,7 @@
       font-family: var(--font-mono);
     }
 
-    /* ─── Education & Certificates Section ─── */
+    /* ─── Education & Certificates ─── */
     .subsection-title {
       font-size: 0.72rem;
       font-weight: 600;
@@ -345,11 +324,8 @@
       padding-left: 1.5rem;
     }
 
-    .subsection-title:first-of-type {
-      margin-top: 0;
-    }
+    .subsection-title:first-of-type { margin-top: 0; }
 
-    /* Certificate credential link */
     .credential-link {
       display: inline-flex;
       align-items: center;
@@ -363,14 +339,69 @@
     }
 
     .credential-link:hover { opacity: 0.8; }
+    .credential-link svg { width: 13px; height: 13px; fill: var(--accent); }
 
-    .credential-link svg {
-      width: 13px;
-      height: 13px;
-      fill: var(--accent);
+    /* ─── Blog / Writing Cards ─── */
+    .blog-card {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      margin: 0 -1.5rem;
+      border-radius: 8px;
+      transition: background 0.3s, box-shadow 0.3s;
+      text-decoration: none;
+      color: inherit;
+      margin-bottom: 0.5rem;
     }
 
-    /* ─── Resume / Archive link ─── */
+    .blog-card:hover {
+      background: var(--bg-card-hover);
+      box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.1);
+    }
+
+    .blog-card:hover .blog-title { color: var(--accent); }
+    .blog-card:hover .arrow-icon { transform: translate(3px, -3px); }
+    .blog-card:hover .blog-thumb { border-color: rgba(94, 234, 212, 0.3); }
+
+    .blog-thumb {
+      width: 120px;
+      height: 72px;
+      border-radius: 4px;
+      border: 2px solid var(--bg-secondary);
+      object-fit: cover;
+      flex-shrink: 0;
+      transition: border-color 0.3s;
+      background: var(--bg-secondary);
+    }
+
+    .blog-info { flex: 1; }
+
+    .blog-date {
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .blog-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.15rem;
+    }
+
+    .blog-desc {
+      font-size: 0.88rem;
+      margin-top: 0.35rem;
+      line-height: 1.6;
+    }
+
+    /* ─── View links ─── */
     .view-link {
       display: inline-flex;
       align-items: center;
@@ -385,7 +416,6 @@
 
     .view-link:hover { color: var(--accent); }
     .view-link:hover .arrow-icon { transform: translate(3px, -3px); }
-
     .view-link .arrow-icon { transition: transform 0.2s; }
 
     /* ─── Footer ─── */
@@ -396,37 +426,18 @@
       padding-top: 2rem;
     }
 
-    .footer a {
-      color: var(--text-primary);
-      text-decoration: none;
-      font-weight: 500;
-    }
-
+    .footer a { color: var(--text-primary); text-decoration: none; font-weight: 500; }
     .footer a:hover { color: var(--accent); }
 
     /* ─── Mobile ─── */
     @media (max-width: 900px) {
-      .container {
-        flex-direction: column;
-        gap: 2rem;
-        padding: 3rem 1.5rem;
-      }
-
-      .sidebar {
-        position: relative;
-        top: 0;
-        width: 100%;
-      }
-
+      .container { flex-direction: column; gap: 2rem; padding: 3rem 1.5rem; }
+      .sidebar { position: relative; top: 0; width: 100%; }
       .nav { display: none; }
-
       .section-label { display: block; }
-
       .sidebar h1 { font-size: 2.2rem; }
-
-      .exp-card, .project-card { flex-direction: column; gap: 0.8rem; }
-
-      .project-img { width: 100%; height: auto; max-width: 200px; }
+      .exp-card, .project-card, .blog-card { flex-direction: column; gap: 0.8rem; }
+      .project-img, .blog-thumb { width: 100%; height: auto; max-width: 200px; }
     }
   </style>
 </head>
@@ -446,6 +457,7 @@
       <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
       <a href="#education">Education & Certs</a>
+      <a href="#writing">Writing</a>
     </nav>
 
     <div class="socials" id="socials"></div>
@@ -487,6 +499,15 @@
       <div id="certificatesContent"></div>
     </section>
 
+    <!-- WRITING -->
+    <section id="writing">
+      <h2 class="section-label">Writing</h2>
+      <div id="writingContent"></div>
+      <a href="blog.html" class="view-link" style="margin-top:2rem;">
+        View All Posts <span class="arrow-icon">→</span>
+      </a>
+    </section>
+
     <!-- FOOTER -->
     <footer class="footer" id="footerContent"></footer>
 
@@ -521,7 +542,6 @@ const DATA = {
   ],
 
   // ─── Social Links ───
-  // Supported types: github, linkedin, twitter, instagram, codepen, email
   socials: [
     { type: "github",   url: "https://github.com/yourusername" },
     { type: "linkedin", url: "https://linkedin.com/in/yourusername" },
@@ -566,7 +586,7 @@ const DATA = {
     }
   ],
 
-  // ─── Featured Projects (shown on main page) ───
+  // ─── Featured Projects ───
   featuredProjects: [
     {
       title: "Project One",
@@ -609,7 +629,7 @@ const DATA = {
       degree: "Bachelor of Science in Computer Science",
       school: "University Name",
       schoolUrl: "https://university.edu",
-      description: "Focused on software engineering, data structures, and web development. Graduated with honors. Participated in hackathons and coding competitions.",
+      description: "Focused on software engineering, data structures, and web development. Graduated with honors.",
       tags: ["Data Structures", "Algorithms", "Web Dev", "Databases"]
     },
     {
@@ -629,27 +649,38 @@ const DATA = {
       title: "AWS Certified Solutions Architect",
       issuer: "Amazon Web Services",
       issuerUrl: "https://aws.amazon.com/certification/",
-      credentialUrl: "https://www.credly.com/badges/your-badge-id",  // link to verify — set "" to hide
+      credentialUrl: "https://www.credly.com/badges/your-badge-id",
       description: "Validated expertise in designing distributed systems and deploying scalable applications on AWS.",
       tags: ["AWS", "Cloud", "Architecture"]
     },
     {
       date: "2023",
-      title: "Meta Front-End Developer Professional Certificate",
+      title: "Meta Front-End Developer Certificate",
       issuer: "Meta (Coursera)",
       issuerUrl: "https://www.coursera.org",
       credentialUrl: "https://coursera.org/verify/your-cert-id",
       description: "Comprehensive program covering React, JavaScript, UX/UI principles, and responsive web design.",
       tags: ["React", "JavaScript", "UX/UI"]
+    }
+  ],
+
+  // ─── Featured Blog Posts (shown on main page — just 2-3) ───
+  featuredPosts: [
+    {
+      date: "2025",
+      title: "Building Accessible Web Apps in 2025",
+      url: "https://yourusername.github.io/blog/accessible-web-apps",
+      description: "A deep dive into modern accessibility practices, ARIA patterns, and how to build inclusive web experiences from the ground up.",
+      image: "assets/blog1.png",       // optional — set "" for no image
+      tags: ["Accessibility", "HTML", "CSS"]
     },
     {
-      date: "2023",
-      title: "Google Data Analytics Certificate",
-      issuer: "Google (Coursera)",
-      issuerUrl: "https://www.coursera.org",
-      credentialUrl: "",
-      description: "Learned data analysis tools and techniques including SQL, R, Tableau, and spreadsheet analytics.",
-      tags: ["SQL", "R", "Tableau", "Data Analysis"]
+      date: "2024",
+      title: "5 Common React Performance Pitfalls",
+      url: "https://yourusername.github.io/blog/react-performance",
+      description: "Lessons learned from optimizing production React apps — from unnecessary re-renders to bundle size bloat.",
+      image: "assets/blog2.png",
+      tags: ["React", "Performance", "JavaScript"]
     }
   ],
 
@@ -674,7 +705,7 @@ const SOCIAL_ICONS = {
   email: `<svg viewBox="0 0 24 24"><path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z"/><path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z"/></svg>`
 };
 
-const CERT_ICON = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>`;
+const CERT_ICON = `<svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>`;
 
 // ─── Render Sidebar ───
 document.getElementById('sidebarName').textContent = DATA.name;
@@ -716,10 +747,7 @@ DATA.experience.forEach(exp => {
     linksHTML = `<div class="exp-links">${exp.links.map(l => `<span>${l.label}</span>`).join('')}</div>`;
   }
 
-  let subtitleHTML = '';
-  if (exp.subtitle) {
-    subtitleHTML = `<p class="exp-subtitle">${exp.subtitle}</p>`;
-  }
+  let subtitleHTML = exp.subtitle ? `<p class="exp-subtitle">${exp.subtitle}</p>` : '';
 
   card.innerHTML = `
     <div class="exp-date">${exp.date}</div>
@@ -734,7 +762,6 @@ DATA.experience.forEach(exp => {
   expEl.appendChild(card);
 });
 
-// Resume link
 if (DATA.resumeUrl) {
   const rLink = document.getElementById('resumeLink');
   rLink.href = DATA.resumeUrl;
@@ -819,6 +846,32 @@ DATA.certificates.forEach(cert => {
     </div>
   `;
   certEl.appendChild(card);
+});
+
+// ─── Render Featured Blog Posts ───
+const writingEl = document.getElementById('writingContent');
+DATA.featuredPosts.forEach(post => {
+  const card = document.createElement('a');
+  card.className = 'blog-card';
+  card.href = post.url;
+  card.target = '_blank';
+  card.rel = 'noopener noreferrer';
+
+  let imgHTML = '';
+  if (post.image) {
+    imgHTML = `<img class="blog-thumb" src="${post.image}" alt="${post.title}" onerror="this.style.display='none'" />`;
+  }
+
+  card.innerHTML = `
+    ${imgHTML}
+    <div class="blog-info">
+      <span class="blog-date">${post.date}</span>
+      <h3 class="blog-title">${post.title} <span class="arrow-icon">↗</span></h3>
+      <p class="blog-desc">${post.description}</p>
+      <div class="tags">${post.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+  `;
+  writingEl.appendChild(card);
 });
 
 // ─── Footer ───
